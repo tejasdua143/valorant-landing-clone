@@ -183,51 +183,35 @@
     /* ── HERO SECTION ── */
     #home { background: #f5f0e8; }
     .hero-section {
-      padding: clamp(64px, 8vw, 120px) 24px clamp(48px, 6vw, 80px);
+      padding: clamp(56px, 7vw, 96px) 24px clamp(56px, 6vw, 80px);
       max-width: 1200px; margin: 0 auto;
+    }
+    @media (min-width:768px) { .hero-section { padding-left: 40px; padding-right: 40px; } }
+    @media (min-width:1024px) { .hero-section { padding-left: 48px; padding-right: 48px; } }
+    .hero-top {
       text-align: center;
+      margin-bottom: clamp(32px, 4vw, 48px);
     }
     .hero-title {
-      font-family: var(--font-source-serif);
-      font-weight: 400;
-      font-size: clamp(2.4rem, 7vw, 5rem);
-      line-height: 1.08;
-      letter-spacing: -0.01em;
-      color: #0f0f0f;
-      max-width: 48rem;
+      font-family: var(--font-lexend);
+      font-weight: 300;
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #0a0a0a;
+      max-width: 720px;
       margin: 0 auto;
-      text-wrap: balance;
     }
-    .hero-subtitle {
-      text-align: center; max-width: 34rem; margin: 24px auto 40px;
-      font-size: clamp(15px, 2.5vw, 17px); line-height: 1.65;
-      color: #5a5a5a; font-family: var(--font-dm-sans); font-weight: 400;
-      text-wrap: balance;
+    .hero-tagline {
+      font-size: 15px; line-height: 1.65;
+      color: #8a8a8a; font-family: var(--font-dm-sans); font-weight: 400;
+      max-width: 420px; margin: 16px auto 0;
     }
-
-    /* Hero buttons */
-    .hero-buttons {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 12px;
-    }
-    @media (min-width:640px) { .hero-buttons { flex-direction: row; flex-wrap: wrap; } }
-    .hero-btn {
-      display: flex; align-items: center; gap: 8px;
-      width: 100%; justify-content: center;
-      padding: 13px 24px; border-radius: 100px;
-      font-size: 14px; font-weight: 600;
-      font-family: var(--font-dm-sans); letter-spacing: 0.01em;
-      transition: opacity 0.2s;
-    }
-    @media (min-width:640px) { .hero-btn { width: auto; } }
-    .hero-btn:hover { opacity: 0.8; }
-    .hero-btn-primary { background: #e8003d; color: #fff; }
-    .hero-btn-dark { background: #111; color: #fff; }
 
 
     /* ── FEATURES DARK CARD ── */
     #features {
-      background: #ece7df;
+      background: #f5f0e8;
       padding: clamp(48px, 6vw, 80px) 16px;
     }
     .features-card {
@@ -470,7 +454,7 @@
 
     /* ── PARTNERS ── */
     #partners {
-      background: #f0ebe3;
+      background: #f5f0e8;
       padding: clamp(48px, 6vw, 80px) 16px clamp(8px, 2vw, 16px);
     }
     .partners-inner {
@@ -530,7 +514,7 @@
 
     /* ── USE CASES ── */
     #use-cases {
-      background: #f0ebe3;
+      background: #f5f0e8;
       padding: clamp(48px, 6vw, 80px) 16px;
     }
     @media (min-width:768px) { #use-cases { padding: clamp(48px,6vw,80px) 32px; } }
@@ -553,21 +537,43 @@
     }
 
     .use-cases-grid {
-      display: grid; grid-template-columns: 1fr; gap: 16px;
+      display: grid; grid-template-columns: 1fr; gap: 20px;
     }
     @media (min-width:768px) { .use-cases-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .use-case-card {
-      background: #f8f4ee; border-radius: 20px;
+      background: #fff; border-radius: 16px;
       border: 1px solid rgba(0,0,0,0.06);
       overflow: hidden; display: flex; flex-direction: column;
-      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+      box-shadow: 0 2px 8px rgba(50,50,70,0.06), 0 1px 3px rgba(0,0,0,0.04);
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease;
     }
-    .use-case-card:hover { transform: translateY(-4px); }
+    .use-case-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(50,50,70,0.1), 0 4px 12px rgba(0,0,0,0.06);
+    }
 
     /* Discord UI mockup inside use case cards */
+    .uc-icon-visual {
+      display: flex; align-items: center; justify-content: center;
+      padding: clamp(32px, 4vw, 48px) 24px;
+      background: #111;
+      border-radius: 12px;
+      margin: 16px 16px 0;
+    }
+    .uc-icon-row {
+      display: flex; align-items: center; gap: 16px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .uc-platform-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.25s ease;
+    }
+    .uc-platform-icon:hover { transform: translateY(-2px); }
     .uc-discord-mock {
-      background: #1e1f22; border-radius: 12px;
+      background: #1e1f22; border-radius: 10px;
       margin: 16px 16px 0; overflow: hidden;
     }
     .uc-discord-header {
@@ -622,43 +628,54 @@
     }
 
     .uc-card-info {
-      padding: clamp(20px,2.5vw,28px);
-      display: flex; flex-direction: column; flex: 1; gap: 8px;
+      padding: 24px;
+      display: flex; flex-direction: column; flex: 1; gap: 6px;
     }
     .uc-card-info .label {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; color: #888;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #aaa;
       font-family: var(--font-dm-sans);
     }
     .uc-card-info h3 {
-      font-size: clamp(15px, 1.5vw, 17px); font-weight: 700; color: #111;
+      font-size: 17px; font-weight: 600; color: #0a0a0a;
       font-family: var(--font-lexend); line-height: 1.3;
+      letter-spacing: -0.01em;
     }
     .uc-card-info .subtitle {
-      font-size: 13px; font-weight: 600; color: #555;
+      font-size: 13px; font-weight: 500; color: #666;
       font-family: var(--font-dm-sans);
     }
     .uc-card-info .desc {
-      font-size: 13px; line-height: 1.65; color: #888;
-      font-family: var(--font-dm-sans); margin-top: 2px;
+      font-size: 13px; line-height: 1.6; color: #888;
+      font-family: var(--font-dm-sans); margin-top: 4px;
     }
-    .uc-card-info .cta-area { margin-top: auto; padding-top: 16px; }
+    .uc-card-info .cta-area {
+      margin-top: auto; padding-top: 20px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
     .uc-cta-btn {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 20px; border-radius: 100px;
+      padding: 11px 22px; border-radius: 8px;
       font-size: 13px; font-weight: 600; font-family: var(--font-dm-sans);
+      box-shadow: 0 1px 3px rgba(50,50,70,0.08);
       transition: opacity 0.2s;
     }
     .uc-cta-btn:hover { opacity: 0.8; }
     .uc-cta-btn.red { background: #e8003d; color: #fff; }
     .uc-cta-btn.dark { background: #111; color: #fff; }
+    .uc-cta-btn.ghost {
+      background: transparent; color: #555;
+      border: 1px solid rgba(0,0,0,0.15);
+      box-shadow: none;
+    }
+    .uc-cta-btn.ghost:hover { background: rgba(0,0,0,0.04); color: #333; }
     .uc-cta-btn.disabled {
       background: #f3f0eb; color: #bbb; cursor: not-allowed; border: 1px solid #e8e4de;
     }
 
     /* ── FOOTER ── */
     .footer-wrapper {
-      background: #f0ebe3;
+      background: #f5f0e8;
       padding: 0 clamp(16px,3vw,32px) clamp(16px,2vw,32px);
     }
     .site-footer {
@@ -766,11 +783,12 @@
       <div class="container">
         <div class="nav-inner">
           <a class="nav-brand" href="#">
+            <img src="artemis-logo.jpeg" alt="Artemis" style="width:28px;height:28px;border-radius:8px;object-fit:cover"/>
             <span class="nav-brand-text">Artemis</span>
           </a>
           <div class="nav-links">
-            <a class="active" href="#">Home</a>
-            <a href="https://tejasdua143.github.io/creator-commerce-landing/?v=1">Creator Stores</a>
+            <a class="active" href="https://tejasdua143.github.io/valorant-landing-clone/">Home</a>
+            <a href="https://tejasdua143.github.io/creator-commerce-landing/">Creator Stores</a>
             <a href="https://tejasdua143.github.io/artemis-landing/">Discord Bot</a>
           </div>
           <div class="nav-right">
@@ -786,15 +804,15 @@
     <!-- Mobile menu -->
     <div class="mobile-menu">
       <div class="mobile-menu-header">
-        <a class="nav-brand" href="#"><span class="nav-brand-text" style="color:#f0f0f2">Artemis</span></a>
+        <a class="nav-brand" href="#"><img src="artemis-logo.jpeg" alt="Artemis" style="width:28px;height:28px;border-radius:8px;object-fit:cover;"/><span class="nav-brand-text" style="color:#f0f0f2">Artemis</span></a>
         <button class="mobile-menu-close" aria-label="Close menu" onclick="document.querySelector('.mobile-menu').classList.remove('is-open')">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
       <div class="mobile-menu-links">
-        <a class="active" href="#">Home</a>
-        <a href="#">Launch Your Store</a>
-        <a href="#">Monetize Your Server</a>
+        <a class="active" href="https://tejasdua143.github.io/valorant-landing-clone/">Home</a>
+        <a href="https://tejasdua143.github.io/creator-commerce-landing/">Creator Stores</a>
+        <a href="https://tejasdua143.github.io/artemis-landing/">Discord Bot</a>
       </div>
       <button class="mobile-menu-cta" onclick="document.querySelector('.modal-overlay').classList.add('is-open'); document.querySelector('.mobile-menu').classList.remove('is-open')">Get started</button>
     </div>
@@ -839,20 +857,106 @@
     <!-- ── HERO ── -->
     <section id="home">
       <div class="hero-section">
-        <h1 class="hero-title">Your fans buy game codes. You should earn from every sale.</h1>
-        <p class="hero-subtitle">Launch a branded store or add our Discord bot. We handle inventory, delivery, and payments.</p>
-
-        <div class="hero-buttons">
-          <a href="#" class="hero-btn hero-btn-primary" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
-            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="15" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M21 19H23V21H1V19H3V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V19H19V11H17V9H20C20.5523 9 21 9.44772 21 10V19ZM5 5V19H13V5H5ZM7 11H11V13H7V11ZM7 7H11V9H7V7Z"></path></svg>
-            Launch Your Store
-          </a>
-          <a href="#" class="hero-btn hero-btn-dark">
-            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="15" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M19.3034 5.33716C17.9344 4.71103 16.4805 4.2547 14.9629 4C14.7719 4.32899 14.5596 4.77471 14.411 5.12492C12.7969 4.89144 11.1944 4.89144 9.60255 5.12492C9.45397 4.77471 9.2311 4.32899 9.05068 4C7.52251 4.2547 6.06861 4.71103 4.70915 5.33716C1.96053 9.39111 1.21766 13.3495 1.5891 17.2549C3.41443 18.5815 5.17612 19.388 6.90701 19.9187C7.33151 19.3456 7.71356 18.73 8.04255 18.0827C7.41641 17.8492 6.82211 17.5627 6.24904 17.2231C6.39762 17.117 6.5462 17.0003 6.68416 16.8835C10.1438 18.4648 13.8911 18.4648 17.3082 16.8835C17.4568 17.0003 17.5948 17.117 17.7434 17.2231C17.1703 17.5627 16.576 17.8492 15.9499 18.0827C16.2789 18.73 16.6609 19.3456 17.0854 19.9187C18.8152 19.388 20.5875 18.5815 22.4033 17.2549C22.8596 12.7341 21.6806 8.80747 19.3034 5.33716ZM8.5201 14.8459C7.48007 14.8459 6.63107 13.9014 6.63107 12.7447C6.63107 11.5879 7.45884 10.6434 8.5201 10.6434C9.57071 10.6434 10.4303 11.5879 10.4091 12.7447C10.4091 13.9014 9.57071 14.8459 8.5201 14.8459ZM15.4936 14.8459C14.4535 14.8459 13.6034 13.9014 13.6034 12.7447C13.6034 11.5879 14.4323 10.6434 15.4936 10.6434C16.5442 10.6434 17.4038 11.5879 17.3825 12.7447C17.3825 13.9014 16.5548 14.8459 15.4936 14.8459Z"></path></svg>
-            Monetize Your Server
-          </a>
+        <div class="hero-top">
+          <h1 class="hero-title">Your community buys game codes. Earn from every sale.</h1>
         </div>
 
+        <div class="use-cases-grid">
+          <!-- Persona 1: Influencer Store -->
+          <div class="use-case-card">
+            <div class="uc-icon-visual">
+              <div class="uc-icon-row">
+                <div class="uc-platform-icon" style="background:#FF0000">
+                  <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </div>
+                <div class="uc-platform-icon" style="background:#9146FF">
+                  <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                </div>
+                <div class="uc-platform-icon" style="background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)">
+                  <svg viewBox="0 0 24 24" fill="#fff" width="22" height="22"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                </div>
+                <div class="uc-platform-icon" style="background:#53FC18">
+                  <svg viewBox="0 0 24 24" fill="#000" width="20" height="20"><path d="M1.333 0h8v5.333H12V2.667h2.667V0h8v8H20v2.667h-2.667v2.666H20V16h2.667v8h-8v-2.667H12v-2.666H9.333V24h-8Z"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="uc-card-info">
+              <span class="label">For Influencers</span>
+              <h3>Launch Your Branded Store</h3>
+              <p class="subtitle">Creators, streamers, gaming influencers.</p>
+              <p class="desc">Get your own storefront in minutes. Share with your audience, sell game gift cards, and earn a commission on every sale. We handle inventory, delivery, and payments.</p>
+              <div class="cta-area">
+                <a href="#" class="uc-cta-btn red" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
+                  Launch Your Store
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </a>
+                <a href="#" class="uc-cta-btn ghost">Know more</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Persona 2: Discord Community -->
+          <div class="use-case-card">
+            <div class="uc-icon-visual" style="background:#5865F2">
+              <svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="56" height="56"><path d="M19.3034 5.33716C17.9344 4.71103 16.4805 4.2547 14.9629 4C14.7719 4.32899 14.5596 4.77471 14.411 5.12492C12.7969 4.89144 11.1944 4.89144 9.60255 5.12492C9.45397 4.77471 9.2311 4.32899 9.05068 4C7.52251 4.2547 6.06861 4.71103 4.70915 5.33716C1.96053 9.39111 1.21766 13.3495 1.5891 17.2549C3.41443 18.5815 5.17612 19.388 6.90701 19.9187C7.33151 19.3456 7.71356 18.73 8.04255 18.0827C7.41641 17.8492 6.82211 17.5627 6.24904 17.2231C6.39762 17.117 6.5462 17.0003 6.68416 16.8835C10.1438 18.4648 13.8911 18.4648 17.3082 16.8835C17.4568 17.0003 17.5948 17.117 17.7434 17.2231C17.1703 17.5627 16.576 17.8492 15.9499 18.0827C16.2789 18.73 16.6609 19.3456 17.0854 19.9187C18.8152 19.388 20.5875 18.5815 22.4033 17.2549C22.8596 12.7341 21.6806 8.80747 19.3034 5.33716ZM8.5201 14.8459C7.48007 14.8459 6.63107 13.9014 6.63107 12.7447C6.63107 11.5879 7.45884 10.6434 8.5201 10.6434C9.57071 10.6434 10.4303 11.5879 10.4091 12.7447C10.4091 13.9014 9.57071 14.8459 8.5201 14.8459ZM15.4936 14.8459C14.4535 14.8459 13.6034 13.9014 13.6034 12.7447C13.6034 11.5879 14.4323 10.6434 15.4936 10.6434C16.5442 10.6434 17.4038 11.5879 17.3825 12.7447C17.3825 13.9014 16.5548 14.8459 15.4936 14.8459Z"/></svg>
+            </div>
+            <div class="uc-card-info">
+              <span class="label">For Communities</span>
+              <h3>Monetize Your Discord Server</h3>
+              <p class="subtitle">Esports orgs, gaming communities, scrim hubs.</p>
+              <p class="desc">Add our bot to your server. Your members buy gift cards directly inside Discord &mdash; you earn on every transaction. Zero setup, instant revenue.</p>
+              <div class="cta-area">
+                <a href="#" class="uc-cta-btn dark">
+                  Add Bot to Server
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </a>
+                <a href="#" class="uc-cta-btn ghost">Know more</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── PARTNERS ── -->
+    <section id="partners">
+      <div class="partners-inner">
+        <div class="partners-header-text">
+          <p>Our Partners</p>
+        </div>
+
+        <div class="partners-row">
+          <a class="partner-tile" href="https://discord.gg/jDHPNvwmhW" target="_blank" rel="noopener">
+            <div class="partner-tile-logo">
+              <img src="partners/ascend-play.png" alt="Ascend Play"/>
+            </div>
+            <div class="partner-tile-info">
+              <div class="name">Ascend Play</div>
+              <div class="role">Valorant &bull; Discord Community</div>
+            </div>
+          </a>
+
+          <a class="partner-tile" href="https://discord.gg/maniac-esports-692965277532684289" target="_blank" rel="noopener">
+            <div class="partner-tile-logo">
+              <img src="partners/maniac-esports.png" alt="Maniac Esports"/>
+            </div>
+            <div class="partner-tile-info">
+              <div class="name">Maniac Esports</div>
+              <div class="role">Influencer Management</div>
+            </div>
+          </a>
+
+          <a class="partner-tile" href="https://www.youtube.com/@harshkhelraay" target="_blank" rel="noopener">
+            <div class="partner-tile-logo">
+              <img src="partners/harsh-khelraay.jpg" alt="Harsh Khelraay"/>
+            </div>
+            <div class="partner-tile-info">
+              <div class="name">Harsh Khelraay</div>
+              <div class="role">Valorant Creator &bull; India</div>
+            </div>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -863,10 +967,6 @@
           <h2>Everything you need to monetize your audience with game gift cards.</h2>
           <div class="features-header-right">
             <p>We handle inventory, delivery, and payments. You bring the audience &mdash; we handle the rest. Earn commission on every sale.</p>
-            <a href="#" class="features-discord-btn" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
-              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="13" width="13" xmlns="http://www.w3.org/2000/svg"><path d="M21 19H23V21H1V19H3V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V19H19V11H17V9H20C20.5523 9 21 9.44772 21 10V19ZM5 5V19H13V5H5ZM7 11H11V13H7V11ZM7 7H11V9H7V7Z"></path></svg>
-              Become a Partner
-            </a>
           </div>
         </div>
 
@@ -1025,150 +1125,6 @@
         <!-- Marquee -->
         <div class="marquee-container">
           <div class="marquee-track" id="marquee-track"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── PARTNERS ── -->
-    <section id="partners">
-      <div class="partners-inner">
-        <div class="partners-header-text">
-          <p>Our Partners</p>
-        </div>
-
-        <div class="partners-row">
-          <div class="partner-tile">
-            <div class="partner-tile-logo">
-              <img src="partners/ascend-play.png" alt="Ascend Play"/>
-            </div>
-            <div class="partner-tile-info">
-              <div class="name">Ascend Play</div>
-              <div class="role">Valorant &bull; Discord Community</div>
-            </div>
-          </div>
-
-          <div class="partner-tile">
-            <div class="partner-tile-logo">
-              <img src="partners/maniac-esports.png" alt="Maniac Esports"/>
-            </div>
-            <div class="partner-tile-info">
-              <div class="name">Maniac Esports</div>
-              <div class="role">Influencer Management</div>
-            </div>
-          </div>
-
-          <div class="partner-tile">
-            <div class="partner-tile-logo">
-              <img src="partners/harsh-khelraay.jpg" alt="Harsh Khelraay"/>
-            </div>
-            <div class="partner-tile-info">
-              <div class="name">Harsh Khelraay</div>
-              <div class="role">Valorant Creator &bull; India</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── USE CASES ── -->
-    <section id="use-cases">
-      <div class="use-cases-inner">
-        <div class="use-cases-header">
-          <h2>Two ways to partner with us</h2>
-          <p>Whether you're an influencer or run a Discord community &mdash; we give you the tools to earn from game gift card sales.</p>
-        </div>
-
-        <div class="use-cases-grid">
-          <!-- Persona 1: Influencer Store -->
-          <div class="use-case-card">
-            <div class="uc-discord-mock" style="background:#1a1a1a">
-              <div class="uc-discord-header" style="border-color:#2a2a2e">
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" style="color:#e8003d" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M21 19H23V21H1V19H3V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V19H19V11H17V9H20C20.5523 9 21 9.44772 21 10V19ZM5 5V19H13V5H5ZM7 11H11V13H7V11ZM7 7H11V9H7V7Z"></path></svg>
-                <span class="channel-name">your-branded-store</span>
-              </div>
-              <div class="uc-discord-body" style="padding:12px">
-                <div style="background:#222;border-radius:8px;padding:10px 12px;margin-bottom:8px">
-                  <p style="font-size:10px;color:#f7c559;font-weight:600;margin-bottom:4px">&#127991;&#65039; Your Store &bull; Live</p>
-                  <div style="display:flex;gap:6px;margin-bottom:6px">
-                    <div style="background:#2b2d31;border-radius:6px;padding:6px 8px;flex:1;text-align:center">
-                      <p style="font-size:9px;color:#96989d">Valorant 475 VP</p>
-                      <p style="font-size:10px;color:#57f287;font-weight:700">&#8377;399</p>
-                    </div>
-                    <div style="background:#2b2d31;border-radius:6px;padding:6px 8px;flex:1;text-align:center">
-                      <p style="font-size:9px;color:#96989d">BGMI 325 UC</p>
-                      <p style="font-size:10px;color:#57f287;font-weight:700">&#8377;322</p>
-                    </div>
-                  </div>
-                  <p style="font-size:9px;color:#555">Fan buys &rarr; instant delivery &rarr; you earn commission</p>
-                </div>
-                <div style="background:#1e3a2e;border-radius:6px;padding:8px 10px;border-left:3px solid #57f287">
-                  <p style="font-size:10px;color:#57f287;font-weight:600">&#128176; This week: &#8377;4,200 earned</p>
-                  <p style="font-size:9px;color:#96989d;margin-top:2px">47 orders &bull; 12% conversion rate</p>
-                </div>
-              </div>
-            </div>
-            <div class="uc-card-info">
-              <span class="label">For Influencers</span>
-              <h3>Launch Your Branded Store</h3>
-              <p class="subtitle">Creators, streamers, gaming influencers.</p>
-              <p class="desc">Get your own storefront in minutes. Share with your audience, sell game gift cards, and earn a commission on every sale. We handle inventory, delivery, and payments.</p>
-              <div class="cta-area">
-                <a href="#" class="uc-cta-btn red" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
-                  Launch Your Store
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Persona 2: Discord Community -->
-          <div class="use-case-card">
-            <div class="uc-discord-mock">
-              <div class="uc-discord-header">
-                <span class="hash">#</span>
-                <span class="channel-name">artemis-shop</span>
-              </div>
-              <div class="uc-discord-body">
-                <div class="msg">
-                  <div class="av" style="background:#5865F2">M</div>
-                  <div class="text">
-                    <span class="user-name">@member</span>
-                    <br/>/shop valorant 475VP
-                  </div>
-                </div>
-                <div class="msg">
-                  <div class="av"><img src="artemis-logo.jpeg" alt="A"/></div>
-                  <div class="text">
-                    <span class="user-name">Artemis</span> <span class="app-badge">BOT</span>
-                    <div class="mini-embed" style="border-left:3px solid #57f287">
-                      <p><span class="highlight">&#10003; Gift Card Delivered!</span></p>
-                      <p>Valorant &mdash; 475 VP</p>
-                      <div class="code-block">XXXX-XXXX-XXXX</div>
-                      <p style="margin-top:4px;color:#96989d;font-size:8px">Server owner earned &#8377;42 commission</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="uc-discord-footer">
-                <span class="tag">Valorant</span>
-                <span class="tag">Genshin</span>
-                <span class="tag">Steam</span>
-                <span class="stat">&#128200; 200+ orders this week</span>
-              </div>
-            </div>
-            <div class="uc-card-info">
-              <span class="label">For Communities</span>
-              <h3>Monetize Your Discord Server</h3>
-              <p class="subtitle">Esports orgs, gaming communities, scrim hubs.</p>
-              <p class="desc">Add our bot to your server. Your members buy gift cards directly inside Discord &mdash; you earn on every transaction. Zero setup, instant revenue.</p>
-              <div class="cta-area">
-                <a href="#" class="uc-cta-btn dark">
-                  Add Bot to Server
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
