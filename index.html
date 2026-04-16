@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Artemis — Game Top-Up Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&family=Source+Serif+4:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { font-family: 'Lexend', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    img, svg, video { max-width: 100%; display: block; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: none; }
+    ul, ol { list-style: none; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── CSS Variables ── */
+    :root {
+      --font-lexend: 'Lexend', sans-serif;
+      --font-source-serif: 'Source Serif 4', serif;
+      --font-dm-sans: 'DM Sans', sans-serif;
+    }
+
+    /* ── NAV ── */
+    .cc-nav-root {
+      z-index: 100;
+      font-family: var(--font-dm-sans);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+    }
+    .cc-nav-root .container {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    }
+    @media (min-width:768px) { .cc-nav-root .container { padding: 0 40px; } }
+    @media (min-width:1024px) { .cc-nav-root .container { padding: 0 48px; } }
+
+    .cc-nav-root .nav {
+      background: #f5f0e8;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 16px 0;
+      backdrop-filter: blur(16px);
+    }
+    .cc-nav-spacer { height: 80px; }
+    .cc-nav-root .nav-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      height: 48px;
+    }
+    .cc-nav-root .nav-inner > .nav-links { justify-self: center; }
+    .cc-nav-root .nav-right {
+      justify-self: end;
+      display: flex; align-items: center; gap: 8px;
+    }
+    @media (max-width:767px) {
+      .cc-nav-root .nav-inner { grid-template-columns: 1fr auto; }
+      .cc-nav-root .nav-right .nav-cta { display: none; }
+    }
+    .cc-nav-root .nav-brand {
+      display: flex; align-items: center; gap: 10px; text-decoration: none;
+    }
+    .cc-nav-root .nav-brand-text {
+      font-family: var(--font-dm-sans);
+      color: #111; font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+    }
+    .cc-nav-root .nav-links {
+      display: none; align-items: center; gap: 4px;
+    }
+    @media (min-width:768px) { .cc-nav-root .nav-links { display: flex; } }
+    .cc-nav-root .nav-links a {
+      color: #777; border-radius: 9999px;
+      padding: 7px 14px; font-size: 13px; font-weight: 500;
+      transition: color 0.2s, background 0.2s;
+    }
+    .cc-nav-root .nav-links a:hover { color: #111; background: rgba(0,0,0,0.06); }
+    .cc-nav-root .nav-links a.active { color: #111; background: rgba(0,0,0,0.06); font-weight: 600; }
+    .cc-nav-root .nav-cta {
+      background: #c6f135; height: 40px; color: #0a0a0f;
+      border-radius: 9999px; font-size: 13px; font-weight: 600;
+      font-family: var(--font-dm-sans);
+      padding: 0 20px; display: inline-flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .cc-nav-root .nav-cta:hover { background: #d4f85a; transform: translateY(-1px); }
+    .cc-nav-root .nav-toggle {
+      width: 40px; height: 40px; color: #111; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    @media (min-width:768px) { .cc-nav-root .nav-toggle { display: none; } }
+
+    /* ── Mobile Menu ── */
+    .mobile-menu {
+      z-index: 200; backdrop-filter: blur(24px);
+      background: rgba(10,10,15,0.97);
+      flex-direction: column; padding: 24px;
+      display: none; position: fixed; inset: 0;
+    }
+    .mobile-menu.is-open { display: flex; }
+    .mobile-menu-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px;
+    }
+    .mobile-menu-close {
+      width: 40px; height: 40px; color: #55555f; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mobile-menu-links { display: flex; flex-direction: column; gap: 4px; }
+    .mobile-menu-links a {
+      color: #8a8a9a; border-radius: 12px; padding: 16px 20px;
+      font-size: 20px; font-weight: 500; transition: color 0.2s, background 0.2s;
+    }
+    .mobile-menu-links a:hover { color: #f0f0f2; background: rgba(255,255,255,0.05); }
+    .mobile-menu-links a.active { color: #f0f0f2; background: rgba(255,255,255,0.08); font-weight: 600; }
+    .mobile-menu-cta {
+      background: #c6f135; height: 52px; color: #0a0a0f;
+      border-radius: 9999px; font-size: 15px; font-weight: 600;
+      font-family: var(--font-dm-sans);
+      display: flex; align-items: center; justify-content: center; margin-top: auto;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      z-index: 999; backdrop-filter: blur(6px);
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; position: fixed; inset: 0;
+    }
+    .modal-overlay.is-open { opacity: 1; visibility: visible; }
+    .modal {
+      background: #141419; border: 1px solid #222230;
+      border-radius: 28px; width: 100%; max-width: 520px;
+      padding: 40px; position: relative;
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    .modal-overlay.is-open .modal { transform: translateY(0) scale(1); }
+    @media (min-width:768px) { .modal { padding: 48px; } }
+    .modal-close {
+      width: 36px; height: 36px; color: #55555f; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      position: absolute; top: 16px; right: 16px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .modal-close:hover { color: #f0f0f2; background: rgba(255,255,255,0.06); }
+    .modal-title {
+      color: #f0f0f2; margin-bottom: 8px;
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 24px; font-weight: 400;
+    }
+    .modal-desc { color: #8a8a9a; margin-bottom: 32px; font-size: 14px; line-height: 1.65; }
+    .modal-form { display: grid; gap: 16px; }
+    .modal-form label { color: #f0f0f2; margin-bottom: 6px; font-size: 13px; font-weight: 600; display: block; }
+    .modal-form input, .modal-form select {
+      border: 1.5px solid #222230; border-radius: 12px;
+      width: 100%; height: 48px; color: #f0f0f2;
+      background: rgba(255,255,255,0.04); padding: 0 16px; font-size: 14px;
+      appearance: none; transition: border-color 0.2s, background 0.2s;
+    }
+    .modal-form input::placeholder { color: #55555f; }
+    .modal-form input:focus, .modal-form select:focus {
+      border-color: #c6f135; background: #141419; outline: none;
+    }
+    .modal-form select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239898AE' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-position: right 14px center; background-repeat: no-repeat; padding-right: 40px;
+      background-color: rgba(255,255,255,0.04);
+    }
+    .modal-submit {
+      background: #c6f135; width: 100%; height: 52px; color: #0a0a0f;
+      border-radius: 12px; font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 8px; transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 0 20px rgba(198,241,53,0.15);
+    }
+    .modal-submit:hover { background: #d4f85a; transform: translateY(-1px); }
+    .modal-note { text-align: center; color: #55555f; margin-top: 12px; font-size: 12px; }
+
+    /* ── HERO SECTION ── */
+    #home { background: #f5f0e8; }
+    .hero-section {
+      padding: clamp(64px, 8vw, 120px) 24px clamp(48px, 6vw, 80px);
+      max-width: 1200px; margin: 0 auto;
+      text-align: center;
+    }
+    .hero-title {
+      font-family: var(--font-source-serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      color: #0f0f0f;
+      max-width: 48rem;
+      margin: 0 auto;
+      text-wrap: balance;
+    }
+    .hero-subtitle {
+      text-align: center; max-width: 34rem; margin: 24px auto 40px;
+      font-size: clamp(15px, 2.5vw, 17px); line-height: 1.65;
+      color: #5a5a5a; font-family: var(--font-dm-sans); font-weight: 400;
+      text-wrap: balance;
+    }
+
+    /* Hero buttons */
+    .hero-buttons {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px;
+    }
+    @media (min-width:640px) { .hero-buttons { flex-direction: row; flex-wrap: wrap; } }
+    .hero-btn {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; justify-content: center;
+      padding: 13px 24px; border-radius: 100px;
+      font-size: 14px; font-weight: 600;
+      font-family: var(--font-dm-sans); letter-spacing: 0.01em;
+      transition: opacity 0.2s;
+    }
+    @media (min-width:640px) { .hero-btn { width: auto; } }
+    .hero-btn:hover { opacity: 0.8; }
+    .hero-btn-primary { background: #e8003d; color: #fff; }
+    .hero-btn-dark { background: #111; color: #fff; }
+
+
+    /* ── FEATURES DARK CARD ── */
+    #features {
+      background: #ece7df;
+      padding: clamp(48px, 6vw, 80px) 16px;
+    }
+    .features-card {
+      background: #111; border-radius: 24px; overflow: hidden;
+      max-width: 1200px; margin: 0 auto;
+      transform: scale(0.9) translateY(56px);
+      opacity: 0;
+      transition: transform 0.8s cubic-bezier(0.22,1,0.36,1), opacity 0.8s ease-out;
+    }
+    .features-card.visible {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    .features-header {
+      padding: clamp(32px,4vw,56px) clamp(20px,3vw,48px) clamp(24px,3vw,40px);
+      display: grid; grid-template-columns: 1fr;
+      gap: 24px; align-items: start;
+    }
+    @media (min-width:768px) { .features-header { grid-template-columns: 1fr 1fr; gap: 32px; } }
+    .features-header h2 {
+      font-family: var(--font-source-serif);
+      font-weight: 400;
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      line-height: 1.3; color: #fff;
+    }
+    .features-header-right { display: flex; flex-direction: column; gap: 16px; }
+    .features-header-right p {
+      font-size: 14px; line-height: 1.7; color: #777;
+      font-family: var(--font-dm-sans);
+    }
+    .features-discord-btn {
+      display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+      background: #5865F2; border: 1px solid #5865F2; color: #fff;
+      padding: 10px 20px; border-radius: 100px;
+      font-size: 13px; font-weight: 600; font-family: var(--font-dm-sans);
+      transition: opacity 0.2s;
+    }
+    .features-discord-btn:hover { opacity: 0.8; }
+
+    /* Feature grid */
+    .features-grid {
+      padding: 0 clamp(12px,2vw,24px) clamp(12px,2vw,24px);
+      display: grid; grid-template-columns: 1fr; gap: 12px;
+    }
+    @media (min-width:768px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+    .feature-card {
+      background: #1a1a1a; border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .feature-card-visual { height: 300px; }
+    .feature-card-info {
+      padding: 20px 24px; border-top: 1px solid #222;
+    }
+    .feature-card-info svg { color: #444; margin-bottom: 10px; }
+    .feature-card-info h3 {
+      font-size: 14px; font-weight: 600; color: #fff;
+      font-family: var(--font-dm-sans); margin-bottom: 4px;
+    }
+    .feature-card-info p {
+      font-size: 13px; color: #666;
+      font-family: var(--font-dm-sans); line-height: 1.5;
+    }
+
+    /* Discord chat mockup */
+    .discord-mock {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 20px; gap: 12px; height: 100%;
+      background: #1e1f22;
+    }
+    .discord-channel-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding-bottom: 8px; margin-bottom: 4px;
+      border-bottom: 1px solid #2e2e2e;
+    }
+    .discord-channel-bar .hash { color: #72767d; font-size: 15px; }
+    .discord-channel-bar .name { color: #c8cbcf; font-size: 12px; font-weight: 600; }
+    .discord-msg {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .discord-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 12px; font-weight: 700;
+    }
+    .discord-avatar img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    }
+    .discord-msg-meta { display: flex; align-items: center; gap: 6px; }
+    .discord-msg-meta .user { color: #fff; font-size: 12px; font-weight: 600; }
+    .discord-msg-meta .app-badge {
+      background: #5865F2; color: #fff; font-size: 9px;
+      padding: 0 4px; border-radius: 4px;
+    }
+    .discord-msg-meta .time { color: #72767d; font-size: 12px; }
+    .discord-msg-text { color: #dcddde; font-size: 12px; margin-top: 2px; }
+    .discord-msg-text .cmd { color: #5865F2; }
+
+    /* Delivery embed */
+    .discord-embed {
+      border-radius: 6px; padding: 10px;
+      background: #2b2d31; margin-top: 6px;
+    }
+    .discord-embed.success { border-left: 3px solid #57f287; }
+    .discord-embed.warning { border-left: 3px solid #f7c559; }
+    .discord-embed h4 { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+    .discord-embed h4.green { color: #57f287; }
+    .discord-embed h4.yellow { color: #f7c559; }
+    .discord-embed p { font-size: 12px; color: #b5bac1; margin-bottom: 6px; }
+    .discord-code {
+      background: #1e1f22; color: #fff; border-radius: 4px;
+      padding: 4px 8px; text-align: center;
+      font-size: 12px; font-family: monospace; font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .discord-embed .speed {
+      font-size: 12px; color: #72767d; margin-top: 6px;
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* Pricing embed */
+    .pricing-mock {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 20px; height: 100%; background: #1e1f22;
+    }
+    .pricing-mock-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    }
+    .pricing-mock-header img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+    .pricing-embed {
+      border-radius: 6px; padding: 12px;
+      background: #2b2d31; border-left: 3px solid #f7c559;
+    }
+    .pricing-embed h4 { color: #f7c559; font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .pricing-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .pricing-row:last-child { margin-bottom: 0; }
+    .pricing-row .game { color: #b5bac1; font-size: 12px; }
+    .pricing-row .prices { display: flex; align-items: center; gap: 8px; }
+    .pricing-row .old { color: #4f545c; font-size: 12px; text-decoration: line-through; }
+    .pricing-row .new { color: #57f287; font-size: 12px; font-weight: 600; }
+    .pricing-row .badge {
+      background: #1e3a2e; color: #57f287; font-size: 9px;
+      padding: 0 4px; border-radius: 4px;
+    }
+
+    /* Game logos grid card */
+    .logos-grid-card {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px; height: 100%; padding: 24px;
+    }
+    .logo-tile {
+      border-radius: 12px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 6px;
+    }
+    .logo-tile img { width: 24px; height: 24px; }
+    .logo-tile span {
+      color: #fff; font-size: 9px; font-weight: 600;
+      line-height: 1; opacity: 0.8;
+    }
+
+    /* Notification feed card */
+    .notif-feed {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 10px; padding: 24px 24px;
+      position: relative; overflow: hidden; height: 100%;
+    }
+    .notif-feed::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(88,101,242,0.15) 0%, transparent 65%);
+    }
+    .notif-item {
+      position: relative; z-index: 10;
+      width: 100%; border-radius: 12px;
+      padding: 10px 12px;
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #242424; border: 1px solid #2e2e2e;
+    }
+    .notif-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 14px; background: #5865F2;
+    }
+    .notif-content { flex: 1; min-width: 0; }
+    .notif-content .meta {
+      display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+    }
+    .notif-content .meta .name { color: #fff; font-size: 12px; font-weight: 600; }
+    .notif-content .meta .app-badge {
+      background: #5865F2; color: #fff; font-size: 9px;
+      padding: 0 4px; border-radius: 4px;
+    }
+    .notif-content .title { color: #ccc; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .notif-content .sub { color: #555; font-size: 12px; }
+    .notif-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px;
+    }
+
+    /* Features big quote */
+    .features-quote {
+      padding: clamp(48px,6vw,80px) clamp(20px,4vw,64px) clamp(32px,4vw,56px);
+    }
+    .features-quote p {
+      font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+      font-family: var(--font-source-serif);
+      font-weight: 400; color: #fff;
+      line-height: 1.2; max-width: 800px;
+      margin: 0 auto; text-align: center;
+    }
+
+    /* ── Marquee ── */
+    .marquee-container {
+      overflow: hidden; padding-bottom: 48px;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+    .marquee-track {
+      display: flex; gap: 16px; width: max-content;
+      animation: scrollIcons 40s linear infinite;
+      will-change: transform;
+    }
+    @keyframes scrollIcons {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      width: 110px; height: 110px; flex-shrink: 0;
+      border-radius: 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .marquee-item img { width: 36px; height: 36px; }
+    .marquee-item span {
+      color: #fff; font-size: 12px; font-weight: 600; opacity: 0.8;
+    }
+
+    /* ── PARTNERS ── */
+    #partners {
+      background: #f0ebe3;
+      padding: clamp(48px, 6vw, 80px) 16px clamp(8px, 2vw, 16px);
+    }
+    .partners-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .partners-header-text {
+      text-align: center; margin-bottom: clamp(32px, 4vw, 48px);
+    }
+    .partners-header-text p {
+      font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #999;
+      font-family: var(--font-dm-sans);
+    }
+    .partners-row {
+      display: grid; grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width:768px) { .partners-row { grid-template-columns: repeat(3, 1fr); } }
+
+    .partner-tile {
+      background: #f8f4ee;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+      padding: 28px 24px;
+      display: flex; align-items: center; gap: 16px;
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s;
+    }
+    .partner-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+    .partner-tile-logo {
+      width: 52px; height: 52px; border-radius: 12px;
+      flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .partner-tile-logo img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 11px;
+    }
+    .partner-tile-logo.initial {
+      background: linear-gradient(135deg, #e8003d, #ff6b35);
+      color: #fff; font-size: 20px; font-weight: 700;
+      font-family: var(--font-dm-sans);
+      border: none;
+    }
+    .partner-tile-info { flex: 1; min-width: 0; }
+    .partner-tile-info .name {
+      font-size: 15px; font-weight: 600; color: #111;
+      font-family: var(--font-dm-sans);
+    }
+    .partner-tile-info .role {
+      font-size: 12px; color: #888;
+      font-family: var(--font-dm-sans); margin-top: 2px;
+    }
+
+    /* ── USE CASES ── */
+    #use-cases {
+      background: #f0ebe3;
+      padding: clamp(48px, 6vw, 80px) 16px;
+    }
+    @media (min-width:768px) { #use-cases { padding: clamp(48px,6vw,80px) 32px; } }
+    .use-cases-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .use-cases-header {
+      margin-bottom: clamp(32px, 4vw, 56px);
+    }
+    .use-cases-header h2 {
+      font-family: var(--font-source-serif);
+      font-weight: 400; color: #111;
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      line-height: 1.2;
+    }
+    .use-cases-header p {
+      color: #888; font-size: 15px; line-height: 1.7;
+      font-family: var(--font-dm-sans);
+      margin-top: 12px; max-width: 480px;
+    }
+
+    .use-cases-grid {
+      display: grid; grid-template-columns: 1fr; gap: 16px;
+    }
+    @media (min-width:768px) { .use-cases-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .use-case-card {
+      background: #f8f4ee; border-radius: 20px;
+      border: 1px solid rgba(0,0,0,0.06);
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+    .use-case-card:hover { transform: translateY(-4px); }
+
+    /* Discord UI mockup inside use case cards */
+    .uc-discord-mock {
+      background: #1e1f22; border-radius: 12px;
+      margin: 16px 16px 0; overflow: hidden;
+    }
+    .uc-discord-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #2a2a2e;
+    }
+    .uc-discord-header .hash { color: #72767d; font-size: 14px; }
+    .uc-discord-header .channel-name { color: #96989d; font-size: 11px; font-weight: 600; }
+    .uc-discord-body { padding: 10px 12px; }
+    .uc-discord-body .msg {
+      display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;
+    }
+    .uc-discord-body .msg:last-child { margin-bottom: 0; }
+    .uc-discord-body .msg .av {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #fff;
+    }
+    .uc-discord-body .msg .av img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    }
+    .uc-discord-body .msg .text { font-size: 10px; color: #b5bac1; line-height: 1.5; }
+    .uc-discord-body .msg .text .user-name { color: #fff; font-weight: 600; }
+    .uc-discord-body .msg .text .app-badge {
+      background: #5865F2; color: #fff; font-size: 8px;
+      padding: 0 3px; border-radius: 3px; vertical-align: middle;
+    }
+    .uc-discord-body .mini-embed {
+      background: #2b2d31; border-radius: 4px; padding: 6px 8px;
+      margin-top: 4px;
+    }
+    .uc-discord-body .mini-embed p { font-size: 9px; color: #96989d; line-height: 1.4; }
+    .uc-discord-body .mini-embed .highlight { color: #57f287; }
+    .uc-discord-body .mini-embed .code-block {
+      background: #1e1f22; color: #fff; border-radius: 3px;
+      padding: 3px 6px; font-family: monospace; font-size: 9px;
+      font-weight: 700; letter-spacing: 0.08em; margin-top: 4px;
+      text-align: center;
+    }
+    .uc-discord-footer {
+      padding: 8px 12px; border-top: 1px solid #2a2a2e;
+      display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+    }
+    .uc-discord-footer .tag {
+      background: rgba(255,255,255,0.07); color: #ccc;
+      font-size: 8.5px; padding: 2px 5px; border-radius: 3px;
+    }
+    .uc-discord-footer .stat {
+      color: #6d6f78; font-size: 8.5px;
+      display: flex; align-items: center; gap: 3px;
+    }
+
+    .uc-card-info {
+      padding: clamp(20px,2.5vw,28px);
+      display: flex; flex-direction: column; flex: 1; gap: 8px;
+    }
+    .uc-card-info .label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #888;
+      font-family: var(--font-dm-sans);
+    }
+    .uc-card-info h3 {
+      font-size: clamp(15px, 1.5vw, 17px); font-weight: 700; color: #111;
+      font-family: var(--font-lexend); line-height: 1.3;
+    }
+    .uc-card-info .subtitle {
+      font-size: 13px; font-weight: 600; color: #555;
+      font-family: var(--font-dm-sans);
+    }
+    .uc-card-info .desc {
+      font-size: 13px; line-height: 1.65; color: #888;
+      font-family: var(--font-dm-sans); margin-top: 2px;
+    }
+    .uc-card-info .cta-area { margin-top: auto; padding-top: 16px; }
+    .uc-cta-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 100px;
+      font-size: 13px; font-weight: 600; font-family: var(--font-dm-sans);
+      transition: opacity 0.2s;
+    }
+    .uc-cta-btn:hover { opacity: 0.8; }
+    .uc-cta-btn.red { background: #e8003d; color: #fff; }
+    .uc-cta-btn.dark { background: #111; color: #fff; }
+    .uc-cta-btn.disabled {
+      background: #f3f0eb; color: #bbb; cursor: not-allowed; border: 1px solid #e8e4de;
+    }
+
+    /* ── FOOTER ── */
+    .footer-wrapper {
+      background: #f0ebe3;
+      padding: 0 clamp(16px,3vw,32px) clamp(16px,2vw,32px);
+    }
+    .site-footer {
+      background: #0a0a0a; border-radius: 24px;
+      overflow: hidden; position: relative;
+    }
+    .stars-bg {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .star {
+      position: absolute; border-radius: 50%; background: #fff;
+    }
+    .shooting-stars {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .shooting-star {
+      position: absolute;
+      width: 120px; height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+      transform: rotate(35deg);
+      animation: shoot 3.5s ease-in-out infinite;
+      opacity: 0;
+    }
+    @keyframes shoot {
+      0% { opacity: 0; transform: rotate(35deg) translateX(-100px); }
+      10% { opacity: 1; }
+      30% { opacity: 1; }
+      50% { opacity: 0; transform: rotate(35deg) translateX(300px); }
+      100% { opacity: 0; }
+    }
+    .footer-hero {
+      position: relative; z-index: 10;
+      width: 100%; padding: 80px 0 48px;
+      text-align: center;
+    }
+    @media (min-width:768px) { .footer-hero { padding: 112px 0 64px; } }
+    .footer-hero p {
+      font-size: clamp(2.4rem, 8vw, 5.5rem);
+      line-height: 1.05; color: #fff;
+      font-weight: 700; letter-spacing: -0.01em;
+      font-family: var(--font-lexend);
+      text-transform: uppercase;
+    }
+    .footer-glow {
+      position: absolute; bottom: 0; left: 50%;
+      width: 80%; height: 240px;
+      background: conic-gradient(from 200deg at 50% 100%, #ff6b35 0%, #f7c59f 20%, #5bc0eb 50%, #9b59b6 70%, #ff4655 90%, #ff6b35 100%);
+      filter: blur(70px); opacity: 0.35;
+      transform: translate(-50%, 30%);
+      pointer-events: none;
+    }
+    .footer-bottom {
+      position: relative; z-index: 10;
+      padding: 32px 32px;
+      border-top: 1px solid #1f1f1f;
+      display: flex; flex-wrap: wrap;
+      align-items: flex-start; justify-content: space-between; gap: 24px;
+    }
+    @media (min-width:768px) { .footer-bottom { padding: 48px 64px; } }
+    .footer-nav { display: flex; flex-direction: column; gap: 8px; }
+    .footer-nav a {
+      color: #666; font-size: 13px; font-family: var(--font-dm-sans);
+      transition: color 0.2s;
+    }
+    @media (min-width:768px) { .footer-nav a { font-size: 14px; } }
+    .footer-nav a:hover { color: #aaa; }
+    .footer-subscribe { display: flex; flex-direction: column; gap: 10px; }
+    .footer-subscribe .label {
+      color: #aaa; margin: 0; font-family: var(--font-dm-sans); font-size: 13px;
+    }
+    @media (min-width:768px) { .footer-subscribe .label { font-size: 14px; } }
+    .footer-subscribe-form {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    @media (min-width:640px) { .footer-subscribe-form { flex-direction: row; align-items: center; } }
+    .footer-subscribe-form input {
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      color: #fff; border-radius: 10px; padding: 10px 14px;
+      outline: none; font-size: 13px;
+      width: 100%;
+    }
+    @media (min-width:640px) { .footer-subscribe-form input { width: 200px; } }
+    @media (min-width:768px) { .footer-subscribe-form input { width: 240px; font-size: 14px; } }
+    .footer-subscribe-form button {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      color: #fff; border-radius: 10px; padding: 10px 14px;
+      font-weight: 500; font-size: 13px; cursor: pointer;
+    }
+    @media (min-width:768px) { .footer-subscribe-form button { font-size: 14px; } }
+
+    /* ── Utility ── */
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .gap-1 { gap: 4px; }
+    .gap-1\\.5 { gap: 6px; }
+    .gap-2 { gap: 8px; }
+    .text-center { text-align: center; }
+  </style>
+</head>
+<body>
+  <!-- ── NAV ── -->
+  <div class="cc-nav-root">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <div class="container">
+        <div class="nav-inner">
+          <a class="nav-brand" href="#">
+            <span class="nav-brand-text">Artemis</span>
+          </a>
+          <div class="nav-links">
+            <a class="active" href="#">Home</a>
+            <a href="#">Creator Stores</a>
+            <a href="#">Discord Bot</a>
+          </div>
+          <div class="nav-right">
+            <button class="nav-cta" onclick="document.querySelector('.modal-overlay').classList.add('is-open')">Get started</button>
+            <button class="nav-toggle" aria-label="Open menu" onclick="document.querySelector('.mobile-menu').classList.add('is-open')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu">
+      <div class="mobile-menu-header">
+        <a class="nav-brand" href="#"><span class="nav-brand-text" style="color:#f0f0f2">Artemis</span></a>
+        <button class="mobile-menu-close" aria-label="Close menu" onclick="document.querySelector('.mobile-menu').classList.remove('is-open')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="mobile-menu-links">
+        <a class="active" href="#">Home</a>
+        <a href="#">Launch Your Store</a>
+        <a href="#">Monetize Your Server</a>
+      </div>
+      <button class="mobile-menu-cta" onclick="document.querySelector('.modal-overlay').classList.add('is-open'); document.querySelector('.mobile-menu').classList.remove('is-open')">Get started</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" onclick="if(event.target===this)this.classList.remove('is-open')">
+      <div class="modal" role="dialog" aria-labelledby="cc-modal-title" aria-modal="true">
+        <button class="modal-close" aria-label="Close" onclick="document.querySelector('.modal-overlay').classList.remove('is-open')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <h3 class="modal-title" id="cc-modal-title">Become a Partner</h3>
+        <p class="modal-desc">Drop your details. We'll set up your branded store or Discord integration and reach out.</p>
+        <form class="modal-form" onsubmit="event.preventDefault()">
+          <div>
+            <label for="cc-m-email">Email</label>
+            <input id="cc-m-email" type="email" placeholder="you@example.com" autocomplete="email" required/>
+          </div>
+          <div>
+            <label for="cc-m-link">Channel / Server link</label>
+            <input id="cc-m-link" type="url" placeholder="twitch.tv/you, discord.gg/yours, etc." autocomplete="url"/>
+          </div>
+          <div>
+            <label for="cc-m-platform">Platform</label>
+            <select id="cc-m-platform">
+              <option value="" disabled selected>How would you like to partner?</option>
+              <option>Influencer Store (I create content)</option>
+              <option>Discord Community (I run a server)</option>
+              <option>Esports Organization</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button type="submit" class="modal-submit">Apply to Partner</button>
+          <p class="modal-note">Takes 10 seconds. We'll never spam you.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main style="font-family:var(--font-lexend)">
+    <div class="cc-nav-spacer"></div>
+
+    <!-- ── HERO ── -->
+    <section id="home">
+      <div class="hero-section">
+        <h1 class="hero-title">Your fans buy game codes. You should earn from every sale.</h1>
+        <p class="hero-subtitle">Launch a branded store or add our Discord bot. We handle inventory, delivery, and payments.</p>
+
+        <div class="hero-buttons">
+          <a href="#" class="hero-btn hero-btn-primary" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="15" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M21 19H23V21H1V19H3V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V19H19V11H17V9H20C20.5523 9 21 9.44772 21 10V19ZM5 5V19H13V5H5ZM7 11H11V13H7V11ZM7 7H11V9H7V7Z"></path></svg>
+            Launch Your Store
+          </a>
+          <a href="#" class="hero-btn hero-btn-dark">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="15" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M19.3034 5.33716C17.9344 4.71103 16.4805 4.2547 14.9629 4C14.7719 4.32899 14.5596 4.77471 14.411 5.12492C12.7969 4.89144 11.1944 4.89144 9.60255 5.12492C9.45397 4.77471 9.2311 4.32899 9.05068 4C7.52251 4.2547 6.06861 4.71103 4.70915 5.33716C1.96053 9.39111 1.21766 13.3495 1.5891 17.2549C3.41443 18.5815 5.17612 19.388 6.90701 19.9187C7.33151 19.3456 7.71356 18.73 8.04255 18.0827C7.41641 17.8492 6.82211 17.5627 6.24904 17.2231C6.39762 17.117 6.5462 17.0003 6.68416 16.8835C10.1438 18.4648 13.8911 18.4648 17.3082 16.8835C17.4568 17.0003 17.5948 17.117 17.7434 17.2231C17.1703 17.5627 16.576 17.8492 15.9499 18.0827C16.2789 18.73 16.6609 19.3456 17.0854 19.9187C18.8152 19.388 20.5875 18.5815 22.4033 17.2549C22.8596 12.7341 21.6806 8.80747 19.3034 5.33716ZM8.5201 14.8459C7.48007 14.8459 6.63107 13.9014 6.63107 12.7447C6.63107 11.5879 7.45884 10.6434 8.5201 10.6434C9.57071 10.6434 10.4303 11.5879 10.4091 12.7447C10.4091 13.9014 9.57071 14.8459 8.5201 14.8459ZM15.4936 14.8459C14.4535 14.8459 13.6034 13.9014 13.6034 12.7447C13.6034 11.5879 14.4323 10.6434 15.4936 10.6434C16.5442 10.6434 17.4038 11.5879 17.3825 12.7447C17.3825 13.9014 16.5548 14.8459 15.4936 14.8459Z"></path></svg>
+            Monetize Your Server
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── FEATURES ── -->
+    <section id="features">
+      <div class="features-card" id="features-card">
+        <div class="features-header">
+          <h2>Everything you need to monetize your audience with game gift cards.</h2>
+          <div class="features-header-right">
+            <p>We handle inventory, delivery, and payments. You bring the audience &mdash; we handle the rest. Earn commission on every sale.</p>
+            <a href="#" class="features-discord-btn" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="13" width="13" xmlns="http://www.w3.org/2000/svg"><path d="M21 19H23V21H1V19H3V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V19H19V11H17V9H20C20.5523 9 21 9.44772 21 10V19ZM5 5V19H13V5H5ZM7 11H11V13H7V11ZM7 7H11V9H7V7Z"></path></svg>
+              Become a Partner
+            </a>
+          </div>
+        </div>
+
+        <div class="features-grid">
+          <!-- Card 1: Instant Delivery -->
+          <div class="feature-card">
+            <div class="feature-card-visual">
+              <div class="discord-mock">
+                <div class="discord-channel-bar">
+                  <span class="hash">#</span>
+                  <span class="name">artemis-shop</span>
+                </div>
+                <div class="discord-msg">
+                  <div class="discord-avatar" style="background:#5865F2">U</div>
+                  <div>
+                    <div class="discord-msg-meta">
+                      <span class="user">you</span>
+                      <span class="time">Today at 4:20 PM</span>
+                    </div>
+                    <p class="discord-msg-text">/shop <span class="cmd">valorant</span> 475VP</p>
+                  </div>
+                </div>
+                <div class="discord-msg">
+                  <div class="discord-avatar"><img src="artemis-logo.jpeg" alt="Artemis"/></div>
+                  <div style="flex:1;min-width:0">
+                    <div class="discord-msg-meta">
+                      <span class="user">Artemis</span>
+                      <span class="app-badge">APP</span>
+                      <span class="time">4:20 PM</span>
+                    </div>
+                    <div class="discord-embed success">
+                      <h4 class="green">&#10003; Gift Card Delivered!</h4>
+                      <p>Valorant &mdash; 475 VP</p>
+                      <div class="discord-code">XXXX-XXXX-XXXX</div>
+                      <div class="speed"><span>&#9889;</span> Delivered in 1.4s</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feature-card-info">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L20.2169 2.82598C20.6745 2.92766 21 3.33347 21 3.80217V13.7889C21 15.795 19.9974 17.6684 18.3282 18.7812L12 23L5.6718 18.7812C4.00261 17.6684 3 15.795 3 13.7889V3.80217C3 3.33347 3.32553 2.92766 3.78307 2.82598L12 1ZM12 3.04879L5 4.60434V13.7889C5 15.1263 5.6684 16.3752 6.7812 17.1171L12 20.5963L17.2188 17.1171C18.3316 16.3752 19 15.1263 19 13.7889V4.60434L12 3.04879ZM16.4524 8.22183L17.8666 9.63604L11.5026 16L7.25999 11.7574L8.67421 10.3431L11.5019 13.1709L16.4524 8.22183Z"></path></svg>
+              <h3>Instant Delivery to Your Fans</h3>
+              <p>Your customers get codes in seconds &mdash; you look great, zero ops on your end</p>
+            </div>
+          </div>
+
+          <!-- Card 2: Lowest Prices -->
+          <div class="feature-card">
+            <div class="feature-card-visual">
+              <div class="pricing-mock">
+                <div class="pricing-mock-header">
+                  <img src="artemis-logo.jpeg" alt="Artemis"/>
+                  <div class="discord-msg-meta">
+                    <span class="user">Artemis</span>
+                    <span class="app-badge">APP</span>
+                  </div>
+                </div>
+                <div class="pricing-embed">
+                  <h4>&#127991;&#65039; Best Deals Today</h4>
+                  <div style="display:flex;flex-direction:column;gap:6px">
+                    <div class="pricing-row">
+                      <span class="game">Valorant</span>
+                      <div class="prices"><span class="old">&#8377;470</span><span class="new">&#8377;399</span><span class="badge">15% off</span></div>
+                    </div>
+                    <div class="pricing-row">
+                      <span class="game">Genshin Impact</span>
+                      <div class="prices"><span class="old">&#8377;800</span><span class="new">&#8377;680</span><span class="badge">15% off</span></div>
+                    </div>
+                    <div class="pricing-row">
+                      <span class="game">BGMI</span>
+                      <div class="prices"><span class="old">&#8377;350</span><span class="new">&#8377;322</span><span class="badge">8% off</span></div>
+                    </div>
+                    <div class="pricing-row">
+                      <span class="game">Roblox</span>
+                      <div class="prices"><span class="old">&#8377;650</span><span class="new">&#8377;601</span><span class="badge">7.5% off</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feature-card-info">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M10.0544 2.0941C11.1756 1.13856 12.8248 1.13855 13.9461 2.09411L15.2941 3.24286C15.4542 3.37935 15.6533 3.46182 15.8631 3.47856L17.6286 3.61945C19.0971 3.73663 20.2633 4.9028 20.3805 6.37131L20.5214 8.13679C20.5381 8.34654 20.6205 8.54568 20.757 8.70585L21.9058 10.0539C22.8614 11.1751 22.8614 12.8243 21.9058 13.9456L20.757 15.2935C20.6206 15.4537 20.538 15.6529 20.5213 15.8627L20.3805 17.6281C20.2633 19.0967 19.0971 20.2628 17.6286 20.3799L15.8631 20.5208C15.6533 20.5376 15.4542 20.6201 15.2941 20.7566L13.9461 21.9053C12.8248 22.8609 11.1756 22.8608 10.0543 21.9053L8.70631 20.7566C8.54615 20.6201 8.34705 20.5376 8.1373 20.5209L6.37184 20.3799C4.9033 20.2627 3.73716 19.0966 3.61997 17.6281L3.47906 15.8627C3.46232 15.6529 3.37983 15.4538 3.24336 15.2936L2.0946 13.9455C1.13905 12.8243 1.13904 11.1752 2.09458 10.0539L3.24334 8.70589C3.37983 8.54573 3.46234 8.34654 3.47907 8.13678L3.61996 6.3713C3.73714 4.90278 4.90327 3.73665 6.3718 3.61946L8.13729 3.47857C8.34705 3.46183 8.54619 3.37935 8.70636 3.24286L10.0544 2.0941ZM14.8284 7.75718L16.2426 9.1714L9.17154 16.2425L7.75733 14.8282L14.8284 7.75718ZM10.2322 10.232C9.64641 10.8178 8.69667 10.8178 8.11088 10.232C7.52509 9.6463 7.52509 8.69652 8.11088 8.11073C8.69667 7.52494 9.64641 7.52494 10.2322 8.11073C10.818 8.69652 10.818 9.6463 10.2322 10.232ZM13.7677 15.8889C14.3535 16.4747 15.3032 16.4747 15.889 15.8889C16.4748 15.3031 16.4748 14.3534 15.889 13.7676C15.3032 13.1818 14.3535 13.1818 13.7677 13.7676C13.1819 14.3534 13.1819 15.3031 13.7677 15.8889Z"></path></svg>
+              <h3>Competitive Margins for You</h3>
+              <p>Best wholesale rates &mdash; more margin per sale, happier fans</p>
+            </div>
+          </div>
+
+          <!-- Card 3: Smart Promotions (logos grid) -->
+          <div class="feature-card">
+            <div class="feature-card-visual" style="padding:24px;overflow:hidden">
+              <div class="logos-grid-card">
+                <div class="logo-tile" style="background:#003087"><img src="logos/playstation.svg" alt="PlayStation" style="filter:brightness(0) invert(1)"/><span>PlayStation</span></div>
+                <div class="logo-tile" style="background:#107C10"><img src="logos/xbox.svg" alt="Xbox"/><span>Xbox</span></div>
+                <div class="logo-tile" style="background:#1b2838"><img src="logos/steam.svg" alt="Steam"/><span>Steam</span></div>
+                <div class="logo-tile" style="background:#ff4655"><img src="logos/valorant.svg" alt="Valorant" style="filter:brightness(0) invert(1)"/><span>Valorant</span></div>
+                <div class="logo-tile" style="background:#1a1a1a"><img src="logos/bgmi.svg" alt="BGMI"/><span>BGMI</span></div>
+                <div class="logo-tile" style="background:#1e4fa3"><img src="logos/genshin.svg" alt="Genshin" style="filter:brightness(0) invert(1)"/><span>Genshin</span></div>
+                <div class="logo-tile" style="background:#1a1a1a"><img src="logos/roblox.svg" alt="Roblox"/><span>Roblox</span></div>
+                <div class="logo-tile" style="background:#5a8a35"><img src="logos/minecraft.svg" alt="Minecraft"/><span>Minecraft</span></div>
+              </div>
+            </div>
+            <div class="feature-card-info">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M14.1213 9.87865C18.4171 14.1744 20.9497 18.6066 19.7782 19.7782C19.3031 20.2532 18.2918 20.1192 16.971 19.5055C13.746 21.6451 9.44716 21.4873 6.38175 19.032L6.34315 19.071L4.92893 17.6568L4.96734 17.6174C2.51262 14.5521 2.35503 10.2537 4.49456 7.03005C3.88075 5.70797 3.74678 4.69685 4.22183 4.2218C5.34959 3.09404 9.49865 5.39866 13.639 9.40425L14.1213 9.87865ZM12.7071 11.2929C10.823 9.40876 8.86963 7.84195 7.23581 6.86954L7.05025 7.05023C4.55691 9.54357 4.33771 13.4499 6.39266 16.1917L8.23943 14.3462C8.06128 13.679 8.23392 12.9376 8.75736 12.4142C9.53841 11.6331 10.8047 11.6331 11.5858 12.4142C12.3668 13.1952 12.3668 14.4616 11.5858 15.2426C11.0626 15.7658 10.3218 15.9385 9.65487 15.7608L7.80749 17.6067C10.5493 19.6623 14.4562 19.4433 16.9497 16.9497L17.1286 16.7623C16.1001 15.0582 14.5564 13.1422 12.7071 11.2929ZM19.7782 4.2218C20.5592 5.00285 20.5592 6.26918 19.7782 7.05023C19.7254 7.10299 19.6704 7.1522 19.6135 7.19783C21.2057 9.71504 21.4267 12.8522 20.276 15.5426C19.8994 14.8064 19.4347 14.0317 18.8899 13.2368C19.2795 11.0596 18.6326 8.73308 16.9497 7.05023C15.2669 5.36737 12.9404 4.72049 10.7627 5.10957C9.96765 4.56488 9.19311 4.10029 8.45731 3.72447C11.1478 2.57335 14.2849 2.79427 16.8039 4.38695C16.8478 4.32955 16.897 4.27457 16.9497 4.2218C17.7308 3.44075 18.9971 3.44075 19.7782 4.2218Z"></path></svg>
+              <h3>Wide Catalog, Always Stocked</h3>
+              <p>8+ platforms, auto-restocked inventory &mdash; your store never runs dry</p>
+            </div>
+          </div>
+
+          <!-- Card 4: Push Notifications -->
+          <div class="feature-card">
+            <div class="feature-card-visual">
+              <div class="notif-feed">
+                <div class="notif-item">
+                  <div class="notif-icon">&#9889;</div>
+                  <div class="notif-content">
+                    <div class="meta"><span class="name">Artemis</span><span class="app-badge">APP</span></div>
+                    <p class="title">New sale &bull; 475 VP via your store</p>
+                    <p class="sub">Commission earned &bull; &#8377;42</p>
+                  </div>
+                  <div class="notif-dot" style="background:#57f287"></div>
+                </div>
+                <div class="notif-item">
+                  <div class="notif-icon">&#128176;</div>
+                  <div class="notif-content">
+                    <div class="meta"><span class="name">Artemis</span><span class="app-badge">APP</span></div>
+                    <p class="title">Weekly payout processed</p>
+                    <p class="sub">&#8377;18,500 sent to your account</p>
+                  </div>
+                  <div class="notif-dot" style="background:#f7c559"></div>
+                </div>
+                <div class="notif-item">
+                  <div class="notif-icon">&#128200;</div>
+                  <div class="notif-content">
+                    <div class="meta"><span class="name">Artemis</span><span class="app-badge">APP</span></div>
+                    <p class="title">Server hit 200 orders this week</p>
+                    <p class="sub">Revenue up 34% from last week</p>
+                  </div>
+                  <div class="notif-dot" style="background:#5bc0eb"></div>
+                </div>
+              </div>
+            </div>
+            <div class="feature-card-info">
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 20H2V18H3V11.0314C3 6.04348 7.02944 2 12 2C16.9706 2 21 6.04348 21 11.0314V18H22V20ZM5 18H19V11.0314C19 7.14806 15.866 4 12 4C8.13401 4 5 7.14806 5 11.0314V18ZM9.5 21H14.5C14.5 22.3807 13.3807 23.5 12 23.5C10.6193 23.5 9.5 22.3807 9.5 21Z"></path></svg>
+              <h3>Real-Time Sales Alerts</h3>
+              <p>Track every order, payout, and commission as it happens</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Big quote -->
+        <div class="features-quote">
+          <p>You focus on your community. We handle inventory, fulfillment, and payments &mdash; you just earn.</p>
+        </div>
+
+        <!-- Marquee -->
+        <div class="marquee-container">
+          <div class="marquee-track" id="marquee-track"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PARTNERS ── -->
+    <section id="partners">
+      <div class="partners-inner">
+        <div class="partners-header-text">
+          <p>Our Partners</p>
+        </div>
+
+        <div class="partners-row">
+          <div class="partner-tile">
+            <div class="partner-tile-logo">
+              <img src="partners/ascend-play.png" alt="Ascend Play"/>
+            </div>
+            <div class="partner-tile-info">
+              <div class="name">Ascend Play</div>
+              <div class="role">Valorant &bull; Discord Community</div>
+            </div>
+          </div>
+
+          <div class="partner-tile">
+            <div class="partner-tile-logo">
+              <img src="partners/maniac-esports.png" alt="Maniac Esports"/>
+            </div>
+            <div class="partner-tile-info">
+              <div class="name">Maniac Esports</div>
+              <div class="role">Influencer Management</div>
+            </div>
+          </div>
+
+          <div class="partner-tile">
+            <div class="partner-tile-logo">
+              <img src="partners/harsh-khelraay.jpg" alt="Harsh Khelraay"/>
+            </div>
+            <div class="partner-tile-info">
+              <div class="name">Harsh Khelraay</div>
+              <div class="role">Valorant Creator &bull; India</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── USE CASES ── -->
+    <section id="use-cases">
+      <div class="use-cases-inner">
+        <div class="use-cases-header">
+          <h2>Two ways to partner with us</h2>
+          <p>Whether you're an influencer or run a Discord community &mdash; we give you the tools to earn from game gift card sales.</p>
+        </div>
+
+        <div class="use-cases-grid">
+          <!-- Persona 1: Influencer Store -->
+          <div class="use-case-card">
+            <div class="uc-discord-mock" style="background:#1a1a1a">
+              <div class="uc-discord-header" style="border-color:#2a2a2e">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" style="color:#e8003d" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M21 19H23V21H1V19H3V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V19H19V11H17V9H20C20.5523 9 21 9.44772 21 10V19ZM5 5V19H13V5H5ZM7 11H11V13H7V11ZM7 7H11V9H7V7Z"></path></svg>
+                <span class="channel-name">your-branded-store</span>
+              </div>
+              <div class="uc-discord-body" style="padding:12px">
+                <div style="background:#222;border-radius:8px;padding:10px 12px;margin-bottom:8px">
+                  <p style="font-size:10px;color:#f7c559;font-weight:600;margin-bottom:4px">&#127991;&#65039; Your Store &bull; Live</p>
+                  <div style="display:flex;gap:6px;margin-bottom:6px">
+                    <div style="background:#2b2d31;border-radius:6px;padding:6px 8px;flex:1;text-align:center">
+                      <p style="font-size:9px;color:#96989d">Valorant 475 VP</p>
+                      <p style="font-size:10px;color:#57f287;font-weight:700">&#8377;399</p>
+                    </div>
+                    <div style="background:#2b2d31;border-radius:6px;padding:6px 8px;flex:1;text-align:center">
+                      <p style="font-size:9px;color:#96989d">BGMI 325 UC</p>
+                      <p style="font-size:10px;color:#57f287;font-weight:700">&#8377;322</p>
+                    </div>
+                  </div>
+                  <p style="font-size:9px;color:#555">Fan buys &rarr; instant delivery &rarr; you earn commission</p>
+                </div>
+                <div style="background:#1e3a2e;border-radius:6px;padding:8px 10px;border-left:3px solid #57f287">
+                  <p style="font-size:10px;color:#57f287;font-weight:600">&#128176; This week: &#8377;4,200 earned</p>
+                  <p style="font-size:9px;color:#96989d;margin-top:2px">47 orders &bull; 12% conversion rate</p>
+                </div>
+              </div>
+            </div>
+            <div class="uc-card-info">
+              <span class="label">For Influencers</span>
+              <h3>Launch Your Branded Store</h3>
+              <p class="subtitle">Creators, streamers, gaming influencers.</p>
+              <p class="desc">Get your own storefront in minutes. Share with your audience, sell game gift cards, and earn a commission on every sale. We handle inventory, delivery, and payments.</p>
+              <div class="cta-area">
+                <a href="#" class="uc-cta-btn red" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
+                  Launch Your Store
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Persona 2: Discord Community -->
+          <div class="use-case-card">
+            <div class="uc-discord-mock">
+              <div class="uc-discord-header">
+                <span class="hash">#</span>
+                <span class="channel-name">artemis-shop</span>
+              </div>
+              <div class="uc-discord-body">
+                <div class="msg">
+                  <div class="av" style="background:#5865F2">M</div>
+                  <div class="text">
+                    <span class="user-name">@member</span>
+                    <br/>/shop valorant 475VP
+                  </div>
+                </div>
+                <div class="msg">
+                  <div class="av"><img src="artemis-logo.jpeg" alt="A"/></div>
+                  <div class="text">
+                    <span class="user-name">Artemis</span> <span class="app-badge">BOT</span>
+                    <div class="mini-embed" style="border-left:3px solid #57f287">
+                      <p><span class="highlight">&#10003; Gift Card Delivered!</span></p>
+                      <p>Valorant &mdash; 475 VP</p>
+                      <div class="code-block">XXXX-XXXX-XXXX</div>
+                      <p style="margin-top:4px;color:#96989d;font-size:8px">Server owner earned &#8377;42 commission</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="uc-discord-footer">
+                <span class="tag">Valorant</span>
+                <span class="tag">Genshin</span>
+                <span class="tag">Steam</span>
+                <span class="stat">&#128200; 200+ orders this week</span>
+              </div>
+            </div>
+            <div class="uc-card-info">
+              <span class="label">For Communities</span>
+              <h3>Monetize Your Discord Server</h3>
+              <p class="subtitle">Esports orgs, gaming communities, scrim hubs.</p>
+              <p class="desc">Add our bot to your server. Your members buy gift cards directly inside Discord &mdash; you earn on every transaction. Zero setup, instant revenue.</p>
+              <div class="cta-area">
+                <a href="#" class="uc-cta-btn dark">
+                  Add Bot to Server
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <div class="footer-wrapper">
+      <footer class="site-footer">
+        <!-- Stars -->
+        <div class="stars-bg" id="stars-bg"></div>
+
+        <!-- Shooting stars -->
+        <div class="shooting-stars">
+          <div class="shooting-star" style="left:15%;top:20%;animation-delay:0s"></div>
+          <div class="shooting-star" style="left:40%;top:12%;animation-delay:1.4s"></div>
+          <div class="shooting-star" style="left:65%;top:35%;animation-delay:2.8s"></div>
+          <div class="shooting-star" style="left:80%;top:8%;animation-delay:0.7s"></div>
+        </div>
+
+        <div class="footer-hero">
+          <p>YOUR AUDIENCE.<br/>YOUR REVENUE.</p>
+        </div>
+
+        <div class="footer-glow"></div>
+
+        <div class="footer-bottom">
+          <nav class="footer-nav">
+            <a href="#">Home</a>
+            <a href="#">Guides</a>
+            <a href="#">Support</a>
+          </nav>
+          <div class="footer-subscribe">
+            <p class="label">Stay in touch</p>
+            <div class="footer-subscribe-form">
+              <input type="email" placeholder="name@email.com"/>
+              <button type="button">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="13" width="13" xmlns="http://www.w3.org/2000/svg"><path d="M21.7267 2.95694L16.2734 22.0432C16.1225 22.5716 15.7979 22.5956 15.5563 22.1126L11 13L1.9229 9.36919C1.41322 9.16532 1.41953 8.86022 1.95695 8.68108L21.0432 2.31901C21.5716 2.14285 21.8747 2.43866 21.7267 2.95694ZM19.0353 5.09647L6.81221 9.17085L12.4488 11.4255L15.4895 17.5068L19.0353 5.09647Z"></path></svg>
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    // Generate stars
+    const starsBg = document.getElementById('stars-bg');
+    for (let i = 0; i < 50; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() > 0.5 ? 2.5 : 1.5;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.opacity = (0.15 + Math.random() * 0.45).toFixed(2);
+      star.style.top = (Math.random() * 80) + '%';
+      star.style.left = (Math.random() * 100) + '%';
+      starsBg.appendChild(star);
+    }
+
+    // Generate marquee items
+    const logos = [
+      { name: 'PlayStation', bg: '#003087', file: 'logos/playstation.svg', invert: true },
+      { name: 'Xbox',        bg: '#107C10', file: 'logos/xbox.svg' },
+      { name: 'Steam',       bg: '#1b2838', file: 'logos/steam.svg' },
+      { name: 'Valorant',    bg: '#ff4655', file: 'logos/valorant.svg', invert: true },
+      { name: 'BGMI',        bg: '#1a1a1a', file: 'logos/bgmi.svg' },
+      { name: 'Genshin',     bg: '#1e4fa3', file: 'logos/genshin.svg', invert: true },
+      { name: 'Roblox',      bg: '#1a1a1a', file: 'logos/roblox.svg' },
+      { name: 'Minecraft',   bg: '#5a8a35', file: 'logos/minecraft.svg' },
+    ];
+    const track = document.getElementById('marquee-track');
+    // 5 copies for seamless loop
+    for (let r = 0; r < 5; r++) {
+      logos.forEach(l => {
+        const d = document.createElement('div');
+        d.className = 'marquee-item';
+        d.style.background = l.bg;
+        d.innerHTML = `<img alt="${l.name}" src="${l.file}" width="36" height="36" style="${l.invert ? 'filter:brightness(0) invert(1)' : ''}"/><span>${l.name}</span>`;
+        track.appendChild(d);
+      });
+    }
+
+    // Scroll-triggered reveal for features card
+    const featuresCard = document.getElementById('features-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    observer.observe(featuresCard);
+  </script>
+</body>
+</html>
