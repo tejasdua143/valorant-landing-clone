@@ -628,26 +628,29 @@
     }
 
     .uc-card-info {
-      padding: 24px;
-      display: flex; flex-direction: column; flex: 1; gap: 6px;
+      padding: 28px 24px 24px;
+      display: flex; flex-direction: column; flex: 1;
     }
     .uc-card-info .label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #aaa;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #8a8a8a;
       font-family: var(--font-dm-sans);
+      margin-bottom: 10px;
     }
     .uc-card-info h3 {
-      font-size: 17px; font-weight: 600; color: #0a0a0a;
-      font-family: var(--font-lexend); line-height: 1.3;
-      letter-spacing: -0.01em;
+      font-size: 22px; font-weight: 700; color: #0a0a0a;
+      font-family: var(--font-lexend); line-height: 1.22;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
     }
     .uc-card-info .subtitle {
-      font-size: 13px; font-weight: 500; color: #666;
-      font-family: var(--font-dm-sans);
+      font-size: 15px; font-weight: 600; color: #0a0a0a;
+      font-family: var(--font-dm-sans); line-height: 1.4;
+      margin-bottom: 14px;
     }
     .uc-card-info .desc {
-      font-size: 13px; line-height: 1.6; color: #888;
-      font-family: var(--font-dm-sans); margin-top: 4px;
+      font-size: 13.5px; line-height: 1.65; color: #6b6b70;
+      font-family: var(--font-dm-sans);
     }
     .uc-card-info .cta-area {
       margin-top: auto; padding-top: 20px;
@@ -792,7 +795,7 @@
             <a href="/valorant-landing-clone/discord-bot/">Discord Bot</a>
           </div>
           <div class="nav-right">
-            <button class="nav-cta" onclick="document.querySelector('.modal-overlay').classList.add('is-open')">Get started</button>
+            <button class="nav-cta" onclick="document.querySelector('.modal-overlay').classList.add('is-open')">Get my store</button>
             <button class="nav-toggle" aria-label="Open menu" onclick="document.querySelector('.mobile-menu').classList.add('is-open')">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
@@ -814,7 +817,7 @@
         <a href="/valorant-landing-clone/creator-stores/">Creator Stores</a>
         <a href="/valorant-landing-clone/discord-bot/">Discord Bot</a>
       </div>
-      <button class="mobile-menu-cta" onclick="document.querySelector('.modal-overlay').classList.add('is-open'); document.querySelector('.mobile-menu').classList.remove('is-open')">Get started</button>
+      <button class="mobile-menu-cta" onclick="document.querySelector('.modal-overlay').classList.add('is-open'); document.querySelector('.mobile-menu').classList.remove('is-open')">Get my store</button>
     </div>
 
     <!-- Modal -->
@@ -823,8 +826,8 @@
         <button class="modal-close" aria-label="Close" onclick="document.querySelector('.modal-overlay').classList.remove('is-open')">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
-        <h3 class="modal-title" id="cc-modal-title">Become a Partner</h3>
-        <p class="modal-desc">Drop your details. We'll set up your branded store or Discord integration and reach out.</p>
+        <h3 class="modal-title" id="cc-modal-title">Get on the roster.</h3>
+        <p class="modal-desc">Creator, clan lead or community owner &mdash; leave your details and the Artemis team will reach out within 48 hours.</p>
         <form class="modal-form" onsubmit="event.preventDefault()">
           <div>
             <label for="cc-m-email">Email</label>
@@ -844,7 +847,7 @@
               <option>Other</option>
             </select>
           </div>
-          <button type="submit" class="modal-submit">Apply to Partner</button>
+          <button type="submit" class="modal-submit">Count me in</button>
           <p class="modal-note">Takes 10 seconds. We'll never spam you.</p>
         </form>
       </div>
@@ -858,7 +861,7 @@
     <section id="home">
       <div class="hero-section">
         <div class="hero-top">
-          <h1 class="hero-title">Your community buys game codes. Earn from every sale.</h1>
+          <h1 class="hero-title">Your drop. Your store. Every giftcode sold pays you.</h1>
         </div>
 
         <div class="use-cases-grid">
@@ -882,12 +885,12 @@
             </div>
             <div class="uc-card-info">
               <span class="label">For Influencers</span>
-              <h3>Launch Your Branded Store</h3>
-              <p class="subtitle">Creators, streamers, gaming influencers.</p>
-              <p class="desc">Get your own storefront in minutes. Share with your audience, sell game gift cards, and earn a commission on every sale. We handle inventory, delivery, and payments.</p>
+              <h3>Creators, stop sending affiliate links.</h3>
+              <p class="subtitle">Own the storefront. Own the payout.</p>
+              <p class="desc">A full branded shop your viewers buy from directly. No middleman eating your cut &mdash; every giftcode sold goes in your payout.</p>
               <div class="cta-area">
                 <a href="#" class="uc-cta-btn red" onclick="document.querySelector('.modal-overlay').classList.add('is-open');return false">
-                  Launch Your Store
+                  Get my shop
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
                 </a>
                 <a href="#" class="uc-cta-btn ghost">Know more</a>
@@ -902,12 +905,12 @@
             </div>
             <div class="uc-card-info">
               <span class="label">For Communities</span>
-              <h3>Monetize Your Discord Server</h3>
-              <p class="subtitle">Esports orgs, gaming communities, scrim hubs.</p>
-              <p class="desc">Add our bot to your server. Your members buy gift cards directly inside Discord &mdash; you earn on every transaction. Zero setup, instant revenue.</p>
+              <h3>Your server, now a revenue stream.</h3>
+              <p class="subtitle">One bot, every major giftcode.</p>
+              <p class="desc">Drop the Artemis bot into your Discord and start selling top-ups to your members the moment it lands. No ads, no external links &mdash; your community, your store.</p>
               <div class="cta-area">
                 <a href="#" class="uc-cta-btn dark">
-                  Add Bot to Server
+                  Add to Discord
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
                 </a>
                 <a href="#" class="uc-cta-btn ghost">Know more</a>
@@ -964,9 +967,9 @@
     <section id="features">
       <div class="features-card" id="features-card">
         <div class="features-header">
-          <h2>Everything you need to monetize your audience with game gift cards.</h2>
+          <h2>The giftcode engine behind your store.</h2>
           <div class="features-header-right">
-            <p>We handle inventory, delivery, and payments. You bring the audience &mdash; we handle the rest. Earn commission on every sale.</p>
+            <p>Live catalog of BGMI, Valorant, Genshin, Roblox, PlayStation, Xbox and Steam giftcodes. Instant delivery the moment a fan checks out, real-time sales alerts, and clean payouts &mdash; we run the rails, you run the brand.</p>
           </div>
         </div>
 
@@ -1009,8 +1012,8 @@
             </div>
             <div class="feature-card-info">
               <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L20.2169 2.82598C20.6745 2.92766 21 3.33347 21 3.80217V13.7889C21 15.795 19.9974 17.6684 18.3282 18.7812L12 23L5.6718 18.7812C4.00261 17.6684 3 15.795 3 13.7889V3.80217C3 3.33347 3.32553 2.92766 3.78307 2.82598L12 1ZM12 3.04879L5 4.60434V13.7889C5 15.1263 5.6684 16.3752 6.7812 17.1171L12 20.5963L17.2188 17.1171C18.3316 16.3752 19 15.1263 19 13.7889V4.60434L12 3.04879ZM16.4524 8.22183L17.8666 9.63604L11.5026 16L7.25999 11.7574L8.67421 10.3431L11.5019 13.1709L16.4524 8.22183Z"></path></svg>
-              <h3>Instant Delivery to Your Fans</h3>
-              <p>Your customers get codes in seconds &mdash; you look great, zero ops on your end</p>
+              <h3>Instant giftcode delivery.</h3>
+              <p>Auto-dropped to the buyer the second checkout hits.</p>
             </div>
           </div>
 
@@ -1050,8 +1053,8 @@
             </div>
             <div class="feature-card-info">
               <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M10.0544 2.0941C11.1756 1.13856 12.8248 1.13855 13.9461 2.09411L15.2941 3.24286C15.4542 3.37935 15.6533 3.46182 15.8631 3.47856L17.6286 3.61945C19.0971 3.73663 20.2633 4.9028 20.3805 6.37131L20.5214 8.13679C20.5381 8.34654 20.6205 8.54568 20.757 8.70585L21.9058 10.0539C22.8614 11.1751 22.8614 12.8243 21.9058 13.9456L20.757 15.2935C20.6206 15.4537 20.538 15.6529 20.5213 15.8627L20.3805 17.6281C20.2633 19.0967 19.0971 20.2628 17.6286 20.3799L15.8631 20.5208C15.6533 20.5376 15.4542 20.6201 15.2941 20.7566L13.9461 21.9053C12.8248 22.8609 11.1756 22.8608 10.0543 21.9053L8.70631 20.7566C8.54615 20.6201 8.34705 20.5376 8.1373 20.5209L6.37184 20.3799C4.9033 20.2627 3.73716 19.0966 3.61997 17.6281L3.47906 15.8627C3.46232 15.6529 3.37983 15.4538 3.24336 15.2936L2.0946 13.9455C1.13905 12.8243 1.13904 11.1752 2.09458 10.0539L3.24334 8.70589C3.37983 8.54573 3.46234 8.34654 3.47907 8.13678L3.61996 6.3713C3.73714 4.90278 4.90327 3.73665 6.3718 3.61946L8.13729 3.47857C8.34705 3.46183 8.54619 3.37935 8.70636 3.24286L10.0544 2.0941ZM14.8284 7.75718L16.2426 9.1714L9.17154 16.2425L7.75733 14.8282L14.8284 7.75718ZM10.2322 10.232C9.64641 10.8178 8.69667 10.8178 8.11088 10.232C7.52509 9.6463 7.52509 8.69652 8.11088 8.11073C8.69667 7.52494 9.64641 7.52494 10.2322 8.11073C10.818 8.69652 10.818 9.6463 10.2322 10.232ZM13.7677 15.8889C14.3535 16.4747 15.3032 16.4747 15.889 15.8889C16.4748 15.3031 16.4748 14.3534 15.889 13.7676C15.3032 13.1818 14.3535 13.1818 13.7677 13.7676C13.1819 14.3534 13.1819 15.3031 13.7677 15.8889Z"></path></svg>
-              <h3>Competitive Margins for You</h3>
-              <p>Best wholesale rates &mdash; more margin per sale, happier fans</p>
+              <h3>Best prices for your audience.</h3>
+              <p>Direct-line pricing beats every listing page on the internet.</p>
             </div>
           </div>
 
@@ -1071,8 +1074,8 @@
             </div>
             <div class="feature-card-info">
               <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M14.1213 9.87865C18.4171 14.1744 20.9497 18.6066 19.7782 19.7782C19.3031 20.2532 18.2918 20.1192 16.971 19.5055C13.746 21.6451 9.44716 21.4873 6.38175 19.032L6.34315 19.071L4.92893 17.6568L4.96734 17.6174C2.51262 14.5521 2.35503 10.2537 4.49456 7.03005C3.88075 5.70797 3.74678 4.69685 4.22183 4.2218C5.34959 3.09404 9.49865 5.39866 13.639 9.40425L14.1213 9.87865ZM12.7071 11.2929C10.823 9.40876 8.86963 7.84195 7.23581 6.86954L7.05025 7.05023C4.55691 9.54357 4.33771 13.4499 6.39266 16.1917L8.23943 14.3462C8.06128 13.679 8.23392 12.9376 8.75736 12.4142C9.53841 11.6331 10.8047 11.6331 11.5858 12.4142C12.3668 13.1952 12.3668 14.4616 11.5858 15.2426C11.0626 15.7658 10.3218 15.9385 9.65487 15.7608L7.80749 17.6067C10.5493 19.6623 14.4562 19.4433 16.9497 16.9497L17.1286 16.7623C16.1001 15.0582 14.5564 13.1422 12.7071 11.2929ZM19.7782 4.2218C20.5592 5.00285 20.5592 6.26918 19.7782 7.05023C19.7254 7.10299 19.6704 7.1522 19.6135 7.19783C21.2057 9.71504 21.4267 12.8522 20.276 15.5426C19.8994 14.8064 19.4347 14.0317 18.8899 13.2368C19.2795 11.0596 18.6326 8.73308 16.9497 7.05023C15.2669 5.36737 12.9404 4.72049 10.7627 5.10957C9.96765 4.56488 9.19311 4.10029 8.45731 3.72447C11.1478 2.57335 14.2849 2.79427 16.8039 4.38695C16.8478 4.32955 16.897 4.27457 16.9497 4.2218C17.7308 3.44075 18.9971 3.44075 19.7782 4.2218Z"></path></svg>
-              <h3>Wide Catalog, Always Stocked</h3>
-              <p>8+ platforms, auto-restocked inventory &mdash; your store never runs dry</p>
+              <h3>Every title your audience plays.</h3>
+              <p>BGMI, Valorant, Steam, PSN, Xbox and more &mdash; always in stock.</p>
             </div>
           </div>
 
@@ -1111,15 +1114,15 @@
             </div>
             <div class="feature-card-info">
               <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 20H2V18H3V11.0314C3 6.04348 7.02944 2 12 2C16.9706 2 21 6.04348 21 11.0314V18H22V20ZM5 18H19V11.0314C19 7.14806 15.866 4 12 4C8.13401 4 5 7.14806 5 11.0314V18ZM9.5 21H14.5C14.5 22.3807 13.3807 23.5 12 23.5C10.6193 23.5 9.5 22.3807 9.5 21Z"></path></svg>
-              <h3>Real-Time Sales Alerts</h3>
-              <p>Track every order, payout, and commission as it happens</p>
+              <h3>Sales data built for creators.</h3>
+              <p>Real-time orders, payouts, and weekly performance in one feed.</p>
             </div>
           </div>
         </div>
 
         <!-- Big quote -->
         <div class="features-quote">
-          <p>You focus on your community. We handle inventory, fulfillment, and payments &mdash; you just earn.</p>
+          <p>You post. They buy. We pay.</p>
         </div>
 
         <!-- Marquee -->
@@ -1144,7 +1147,7 @@
         </div>
 
         <div class="footer-hero">
-          <p>YOUR AUDIENCE.<br/>YOUR REVENUE.</p>
+          <p>YOU BRING THE FANS.<br/>WE RUN THE STORE.</p>
         </div>
 
         <div class="footer-glow"></div>
